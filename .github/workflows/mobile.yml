@@ -6,10 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Setup Java JDK
-        uses: actions/setup-java@main
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -37,8 +37,8 @@ jobs:
         run: haxelib run lime build android -final
 
       - name: Upload Artifact
-        if: ${{ success() }}
-        uses: actions/upload-artifact@main
+        if: success()
+        uses: actions/upload-artifact@v3
         with:
           name: androidBuild
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
@@ -48,7 +48,7 @@ jobs:
     runs-on: macos-13
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
@@ -63,19 +63,4 @@ jobs:
 
       - name: Compile
         run: haxelib run lime build ios -final
-
-      - name: Make Ipa
-        run: |
-          cd export/release/ios/build/Release-iphoneos
-          mkdir Payload
-          mv *.app Payload
-          zip -r CodenameEngine.ipa Payload
-
-      - name: Upload Artifact
-        if: ${{ success() }}
-        uses: actions/upload-artifact@main
-        with:
-          name: iOSBuild
-          path: export/release/ios/build/Release-iphoneos/*.ipa
-          if-no-files-found: error
-          
+        
